@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/pages/new_product.dart';
 import 'package:myapp/pages/pages.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -24,6 +25,12 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: HomePage());
+        initialRoute: "/",
+        routes: {
+          "/":(context) => const HomePage(),
+          "/nuevo":(context) => const ModalNewProduct(),
+        },
+        // home: const HomePage()//initial route
+    );
   }
 }
