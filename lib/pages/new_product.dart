@@ -1,8 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:myapp/models/place.dart';
 import 'package:myapp/services/appstate.dart';
-import 'package:myapp/services/userservices.dart';
+// import 'package:myapp/services/userservices.dart';
 import 'package:myapp/values/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -22,12 +23,14 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
   final TextEditingController _nuevoLugarController = TextEditingController();
 
   String? _selectedLugar;
-  final List<String> _lugares = ['D1', 'OLIMPICA', 'ARA'];
+  // final List<String> _lugares = ['D1', 'OLIMPICA', 'ARA'];
 
   final GlobalKey<FormState> _formularioKey = GlobalKey<FormState>();
+  Appstate? state;
 
   @override
   Widget build(BuildContext context) {
+    state = Provider.of<Appstate>(context, listen: true);
     return Scaffold(
       appBar: AppBar(),
       body: Container(
@@ -53,21 +56,28 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
               Row(
                   children: [
                     Expanded(
-                      child: DropdownButtonFormField<String>(
-                        value: _selectedLugar,
-                        decoration: const InputDecoration(labelText: 'Lugar del producto'),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedLugar = newValue;
-                          });
-                        },
-                        items: _lugares.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
+                      child: FutureBuilder(
+                        future: state!.getPlaces(), 
+                        builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                          List<Place>? places = (snapshot.data ?? []).cast<Place>();
+                          return DropdownButtonFormField<String>(
+                            value: _selectedLugar,
+                            decoration: const InputDecoration(labelText: 'Lugar del producto'),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedLugar = newValue;
+                              });
+                            },
+                            //TODO: cargar lista de lugares
+                            items: places.map<DropdownMenuItem<String>>((Place lugar) {
+                                return DropdownMenuItem<String>(
+                                  value: lugar.name,
+                                  child: Text(lugar.name ?? ''),
+                                );
+                              }).toList(),
+                            
                           );
-                        }).toList(),
-                      ),
+                        })
                     ),
                     IconButton(
                       icon: const Icon(Icons.add),
@@ -83,17 +93,12 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                   ElevatedButton(
                     onPressed: () async {
                       //TODO: Aceptar agregar tarea
-                      if (_formularioKey.currentState!.validate()) {
+                      if (_formularioKey.currentState!.validate() && _selectedLugar != null && _selectedLugar!.isNotEmpty) {
                         
                         bool respuesta = await Provider
                           .of<Appstate>(context, listen: false)
                           .saveProducts(_tituloController.text, _selectedLugar!);
                         
-                        // await UserServices().saveProduct(
-                        //   _tituloController.text,
-                        //   _selectedLugar!
-                        // );
-
                         if(respuesta) {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -161,15 +166,37 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
               child: const Text('Cancelar'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_nuevoLugarController.text.isNotEmpty) {
                   //TODO: Agregar lugar a Firebase
-                  setState(() {
-                    _lugares.add(_nuevoLugarController.text);
-                    _selectedLugar = _nuevoLugarController.text;
-                  });
-                  _nuevoLugarController.clear();
-                  Navigator.pop(context);
+                  bool response = await Provider
+                    .of<Appstate>(context, listen: false)
+                    .savePlace(_nuevoLugarController.text);
+
+                  if(response) {
+                    //!delete
+                    // setState(() {
+                    //   _lugares.add(_nuevoLugarController.text);
+                    //   _selectedLugar = _nuevoLugarController.text;
+                    // });
+                    //! end delete
+
+                    _nuevoLugarController.clear();
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Lugar agregado correctamente'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Algo salió mal'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
               },
               child: const Text('Guardar'),
