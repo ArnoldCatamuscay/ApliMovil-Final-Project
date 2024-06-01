@@ -89,11 +89,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                           .of<Appstate>(context, listen: false)
                           .saveProducts(_tituloController.text, _selectedLugar!);
                         
-                        // await UserServices().saveProduct(
-                        //   _tituloController.text,
-                        //   _selectedLugar!
-                        // );
-
                         if(respuesta) {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -161,15 +156,36 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
               child: const Text('Cancelar'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_nuevoLugarController.text.isNotEmpty) {
                   //TODO: Agregar lugar a Firebase
-                  setState(() {
-                    _lugares.add(_nuevoLugarController.text);
-                    _selectedLugar = _nuevoLugarController.text;
-                  });
-                  _nuevoLugarController.clear();
-                  Navigator.pop(context);
+                  bool response = await Provider
+                    .of<Appstate>(context, listen: false)
+                    .savePlace(_nuevoLugarController.text);
+
+                  if(response) {
+                    //!delete
+                    setState(() {
+                      _lugares.add(_nuevoLugarController.text);
+                      _selectedLugar = _nuevoLugarController.text;
+                    });//! end delete
+
+                    _nuevoLugarController.clear();
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Lugar agregado correctamente'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Algo salió mal'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
               },
               child: const Text('Guardar'),
