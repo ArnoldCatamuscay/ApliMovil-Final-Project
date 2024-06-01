@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:myapp/services/appstate.dart';
 import 'package:myapp/services/userservices.dart';
 import 'package:myapp/values/theme.dart';
+import 'package:provider/provider.dart';
 
 class ModalNewProduct extends StatefulWidget {
   
@@ -82,10 +84,15 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                     onPressed: () async {
                       //TODO: Aceptar agregar tarea
                       if (_formularioKey.currentState!.validate()) {
-                        bool respuesta = await UserServices().saveProduct(
-                          _tituloController.text,
-                          _selectedLugar!
-                        );
+                        
+                        bool respuesta = await Provider
+                          .of<Appstate>(context, listen: false)
+                          .saveProducts(_tituloController.text, _selectedLugar!);
+                        
+                        // await UserServices().saveProduct(
+                        //   _tituloController.text,
+                        //   _selectedLugar!
+                        // );
 
                         if(respuesta) {
                           Navigator.pop(context);
@@ -156,6 +163,7 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
             ElevatedButton(
               onPressed: () {
                 if (_nuevoLugarController.text.isNotEmpty) {
+                  //TODO: Agregar lugar a Firebase
                   setState(() {
                     _lugares.add(_nuevoLugarController.text);
                     _selectedLugar = _nuevoLugarController.text;

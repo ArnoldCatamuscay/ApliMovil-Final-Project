@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:myapp/pages/new_product.dart';
 import 'package:myapp/pages/pages.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:myapp/services/appstate.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -18,7 +20,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => Appstate(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Lista Compras App',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -31,6 +36,7 @@ class MyApp extends StatelessWidget {
           "/nuevo":(context) => const ModalNewProduct(),
         },
         // home: const HomePage()//initial route
+      )
     );
   }
 }
