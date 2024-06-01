@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "737285632088",
+    "firebase_url": "https://aplimovil-final-default-rtdb.firebaseio.com",
+    "project_id": "aplimovil-final",
+    "storage_bucket": "aplimovil-final.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737285632088:android:e4d711a4a8de36eb0d1a2d",
+        "android_client_info": {
+          "package_name": "co.unicauca.aplimovil.todolist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArtdijndEk8osWsRVHu9j-dYgOaNjl0zk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
