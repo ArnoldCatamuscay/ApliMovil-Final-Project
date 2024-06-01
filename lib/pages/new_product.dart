@@ -97,7 +97,7 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                         
                         bool respuesta = await Provider
                           .of<Appstate>(context, listen: false)
-                          .saveProducts(_tituloController.text, _selectedLugar!);
+                          .saveProduct(_tituloController.text, _selectedLugar!);
                         
                         if(respuesta) {
                           Navigator.pop(context);

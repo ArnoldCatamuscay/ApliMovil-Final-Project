@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(title: const Text('Lista Compras App')),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/nuevo');
+          Navigator.pushNamed(context, '/new-product');
         }, 
         child: const Icon(Icons.add),
         ),

@@ -29,13 +29,11 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        //home: const MyHomePage(title: 'Flutter Demo Home Page'),
         initialRoute: "/",
         routes: {
           "/":(context) => const HomePage(),
-          "/nuevo":(context) => const ModalNewProduct(),
+          "/new-product":(context) => const ModalNewProduct(),
         },
-        // home: const HomePage()//initial route
       )
     );
   }

@@ -3,8 +3,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:myapp/models/product.dart';
 
-class UserServices {
-  Future<List<Product>> getProductos() async {
+class ProductServices {
+  Future<List<Product>> getProducts() async {
 
     List<Product> products = [];
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/models/place.dart';
 import 'package:myapp/models/product.dart';
 import 'package:myapp/services/placeservices.dart';
-import 'package:myapp/services/userservices.dart';
+import 'package:myapp/services/productservices.dart';
 
 class Appstate with ChangeNotifier {
   
@@ -10,9 +10,9 @@ class Appstate with ChangeNotifier {
   List<Place> _places = [];
   
   //* Products
-  Future<bool> saveProducts(String productName, String placeName) async {
+  Future<bool> saveProduct(String productName, String placeName) async {
     try {
-      bool response = await UserServices().saveProduct(productName, placeName);
+      bool response = await ProductServices().saveProduct(productName, placeName);
       if(response) {
         notifyListeners();
       }
@@ -24,7 +24,7 @@ class Appstate with ChangeNotifier {
 
   Future<List<Product>> getProducts() async {
     try{
-      _products = await UserServices().getProductos();
+      _products = await ProductServices().getProducts();
       
       return _products;
     } catch (e){
