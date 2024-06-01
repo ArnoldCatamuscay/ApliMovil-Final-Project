@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:myapp/services/userservices.dart';
 import 'package:myapp/values/theme.dart';
@@ -15,6 +17,7 @@ class ModalNewProduct extends StatefulWidget {
 class _ModalNuevoProductoState extends State<ModalNewProduct> {
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _lugarController = TextEditingController();
+  final TextEditingController _nuevoLugarController = TextEditingController();
 
   String? _selectedLugar;
   final List<String> _lugares = ['D1', 'OLIMPICA', 'ARA'];
@@ -42,6 +45,7 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                   if(dato!.isEmpty) {
                     return 'Este campo es requerido';
                   }
+                  return null;
                 }
               ),
               Row(
@@ -66,7 +70,7 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        //TODO: Manejar evento del button
+                        _mostrarModalAgregarLugar(context);
                       },
                     ),
                   ],
@@ -78,8 +82,9 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                     onPressed: () async {
                       //TODO: Aceptar agregar tarea
                       if (_formularioKey.currentState!.validate()) {
-                        bool respuesta = await UserServices().saveNotas(
-                          _tituloController.text
+                        bool respuesta = await UserServices().saveProduct(
+                          _tituloController.text,
+                          _selectedLugar!
                         );
 
                         if(respuesta) {
@@ -119,6 +124,54 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
     ),
     );
   }
+
+  void _mostrarModalAgregarLugar(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Agregar nuevo lugar'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _nuevoLugarController,
+                decoration: const InputDecoration(labelText: 'Nombre del lugar'),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es requerido';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_nuevoLugarController.text.isNotEmpty) {
+                  setState(() {
+                    _lugares.add(_nuevoLugarController.text);
+                    _selectedLugar = _nuevoLugarController.text;
+                  });
+                  _nuevoLugarController.clear();
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Guardar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   void dispose() {
