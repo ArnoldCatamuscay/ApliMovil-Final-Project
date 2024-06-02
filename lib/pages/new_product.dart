@@ -32,11 +32,11 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
   Widget build(BuildContext context) {
     state = Provider.of<Appstate>(context, listen: true);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text("Agregar producto"),),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         //height: 300,
-        color: blanco,
+        // color: blanco,
         child: Form(
           key: _formularioKey,
           child: SingleChildScrollView(
@@ -119,13 +119,22 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
 
                       
                     },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.indigo),
+                      foregroundColor: WidgetStateProperty.all(Colors.white)
+                    ),
                     child: const Text('Aceptar'),
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
-                    }, child: const Text('Cancelar'),
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.pink),
+                      foregroundColor: WidgetStateProperty.all(Colors.white)
+                    ), 
+                    child: const Text('Cancelar'),
                   ),
                 ],
               )
@@ -159,12 +168,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancelar'),
-            ),
             ElevatedButton(
               onPressed: () async {
                 if (_nuevoLugarController.text.isNotEmpty) {
@@ -199,7 +202,21 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                   }
                 }
               },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.indigo),
+                foregroundColor: WidgetStateProperty.all(Colors.white)
+              ),
               child: const Text('Guardar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.pink),
+                foregroundColor: WidgetStateProperty.all(Colors.white)
+              ),
+              child: const Text('Cancelar'),
             ),
           ],
         );

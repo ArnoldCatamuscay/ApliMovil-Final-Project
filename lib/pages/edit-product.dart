@@ -41,7 +41,7 @@ class _ModalEditProductState extends State<ModalEditProduct> {
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         //height: 300,
-        color: blanco,
+        // color: blanco,
         child: Form(
           key: _formularioKey2,
           child: SingleChildScrollView(
@@ -138,13 +138,22 @@ class _ModalEditProductState extends State<ModalEditProduct> {
 
                       
                     },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.indigo),
+                      foregroundColor: WidgetStateProperty.all(Colors.white)
+                    ),
                     child: const Text('Actualizar'),
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
-                    }, child: const Text('Cancelar'),
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.pink),
+                      foregroundColor: WidgetStateProperty.all(Colors.white)
+                    ), 
+                    child: const Text('Cancelar'),
                   ),
                 ],
               )
@@ -178,12 +187,6 @@ class _ModalEditProductState extends State<ModalEditProduct> {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancelar'),
-            ),
             ElevatedButton(
               onPressed: () async {
                 if (_nuevoLugarController.text.isNotEmpty) {
@@ -218,7 +221,21 @@ class _ModalEditProductState extends State<ModalEditProduct> {
                   }
                 }
               },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.indigo),
+                foregroundColor: WidgetStateProperty.all(Colors.white)
+              ),
               child: const Text('Guardar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.pink),
+                foregroundColor: WidgetStateProperty.all(Colors.white)
+              ),
+              child: const Text('Cancelar'),
             ),
           ],
         );

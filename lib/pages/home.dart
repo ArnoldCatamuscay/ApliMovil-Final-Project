@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/models/product.dart';
 import 'package:myapp/services/appstate.dart';
+import 'package:myapp/values/theme.dart';
 // import 'package:myapp/services/userservices.dart';
 import 'package:provider/provider.dart';
 // import 'package:myapp/pages/new_product.dart';
@@ -27,6 +28,8 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.pushNamed(context1, '/new-product');
         }, 
+        backgroundColor: primary,
+        foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         ),
       body: FutureBuilder(
@@ -41,7 +44,8 @@ class _HomePageState extends State<HomePage> {
                 subtitle: Text(product.place!),
                 trailing: IconButton(
                   onPressed: () => Navigator.pushNamed(context1, '/edit-product', arguments: product), 
-                  icon: const Icon(Icons.edit)
+                  icon: const Icon(Icons.edit),
+                  color: primary,
                 ),
               )  
             ],
