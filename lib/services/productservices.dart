@@ -48,9 +48,6 @@ class ProductServices {
   }
 
   Future<bool> updateProduct(String key, String newTitle, String newPlace) async {
-    // print("ID: " + key);
-    // print("Titulo: " + newTitle);
-    // print("Lugar " + newPlace);
     try {
       await FirebaseDatabase.instance
         .reference()

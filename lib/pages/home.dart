@@ -1,12 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:myapp/models/product.dart';
 import 'package:myapp/services/appstate.dart';
 import 'package:myapp/values/theme.dart';
-// import 'package:myapp/services/userservices.dart';
 import 'package:provider/provider.dart';
-// import 'package:myapp/pages/new_product.dart';
-// import 'package:myapp/values/theme.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -43,7 +39,11 @@ class _HomePageState extends State<HomePage> {
                 title: Text(product.title!),
                 subtitle: Text(product.place!),
                 trailing: IconButton(
-                  onPressed: () => Navigator.pushNamed(context1, '/edit-product', arguments: product), 
+                  onPressed: () => Navigator.pushNamed(
+                    context1, 
+                    '/edit-product', 
+                    arguments: product
+                  ), 
                   icon: const Icon(Icons.edit),
                   color: primary,
                 ),

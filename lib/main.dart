@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/pages/edit-product.dart';
-import 'package:myapp/pages/new_product.dart';
 import 'package:myapp/pages/pages.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:myapp/services/appstate.dart';

@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/models/place.dart';
 import 'package:myapp/services/appstate.dart';
-// import 'package:myapp/services/userservices.dart';
-import 'package:myapp/values/theme.dart';
 import 'package:provider/provider.dart';
 
 class ModalNewProduct extends StatefulWidget {
@@ -23,7 +21,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
   final TextEditingController _nuevoLugarController = TextEditingController();
 
   String? _selectedLugar;
-  // final List<String> _lugares = ['D1', 'OLIMPICA', 'ARA'];
 
   final GlobalKey<FormState> _formularioKey = GlobalKey<FormState>();
   Appstate? state;
@@ -35,8 +32,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
       appBar: AppBar(title: const Text("Agregar producto"),),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        //height: 300,
-        // color: blanco,
         child: Form(
           key: _formularioKey,
           child: SingleChildScrollView(
@@ -68,7 +63,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                                 _selectedLugar = newValue;
                               });
                             },
-                            //TODO: cargar lista de lugares
                             items: places.map<DropdownMenuItem<String>>((Place lugar) {
                                 return DropdownMenuItem<String>(
                                   value: lugar.name,
@@ -92,7 +86,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
-                      //TODO: Aceptar agregar tarea
                       if (_formularioKey.currentState!.validate() && _selectedLugar != null && _selectedLugar!.isNotEmpty) {
                         
                         bool respuesta = await Provider
@@ -116,8 +109,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                           );
                         }
                       }
-
-                      
                     },
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(Colors.indigo),
@@ -171,18 +162,11 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
             ElevatedButton(
               onPressed: () async {
                 if (_nuevoLugarController.text.isNotEmpty) {
-                  //TODO: Agregar lugar a Firebase
                   bool response = await Provider
                     .of<Appstate>(context, listen: false)
                     .savePlace(_nuevoLugarController.text);
 
                   if(response) {
-                    //!delete
-                    // setState(() {
-                    //   _lugares.add(_nuevoLugarController.text);
-                    //   _selectedLugar = _nuevoLugarController.text;
-                    // });
-                    //! end delete
 
                     _nuevoLugarController.clear();
                     Navigator.pop(context);
@@ -223,7 +207,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
       },
     );
   }
-
 
   @override
   void dispose() {
