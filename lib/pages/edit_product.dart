@@ -2,45 +2,52 @@
 
 import 'package:flutter/material.dart';
 import 'package:myapp/models/place.dart';
+import 'package:myapp/models/product.dart';
 import 'package:myapp/services/appstate.dart';
 import 'package:provider/provider.dart';
 
-class ModalNewProduct extends StatefulWidget {
+class ModalEditProduct extends StatefulWidget {
   
-  const ModalNewProduct({
+  const ModalEditProduct({
     super.key,
   });
   
   @override
-  State<ModalNewProduct> createState() => _ModalNuevoProductoState();
+  State<ModalEditProduct> createState() => _ModalEditProductState();
 }
 
-class _ModalNuevoProductoState extends State<ModalNewProduct> {
+class _ModalEditProductState extends State<ModalEditProduct> {
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _lugarController = TextEditingController();
   final TextEditingController _nuevoLugarController = TextEditingController();
 
   String? _selectedLugar;
 
-  final GlobalKey<FormState> _formularioKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formularioKey2 = GlobalKey<FormState>();
   Appstate? state;
 
   @override
   Widget build(BuildContext context) {
+    final Product product = ModalRoute.of(context)!.settings.arguments as Product;
+
     state = Provider.of<Appstate>(context, listen: true);
     return Scaffold(
-      appBar: AppBar(title: const Text("Agregar producto"),),
+      appBar: AppBar(title: const Text("Editar producto"),),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Form(
-          key: _formularioKey,
+          key: _formularioKey2,
           child: SingleChildScrollView(
             child: Column(
             children: [
               TextFormField(
-                controller: _tituloController,
-                decoration: 
-                const InputDecoration(labelText: 'Nombre del producto'),
+                initialValue: product.title,
+                onChanged: (value) {
+                  _tituloController.text = value;
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Nombre del producto', 
+                ),
                 validator: (String? dato) {
                   if(dato!.isEmpty) {
                     return 'Este campo es requerido';
@@ -56,8 +63,11 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                         builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                           List<Place>? places = (snapshot.data ?? []).cast<Place>();
                           return DropdownButtonFormField<String>(
-                            value: _selectedLugar,
-                            decoration: const InputDecoration(labelText: 'Lugar del producto'),
+                            value: _selectedLugar ?? product.place,
+                            decoration: InputDecoration(
+                              labelText: 'Lugar del producto',
+                              hintText: product.place
+                            ),
                             onChanged: (String? newValue) {
                               setState(() {
                                 _selectedLugar = newValue;
@@ -86,17 +96,20 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
-                      if (_formularioKey.currentState!.validate() && _selectedLugar != null && _selectedLugar!.isNotEmpty) {
-                        
+                      if (_formularioKey2.currentState!.validate()) {
+                        if(_tituloController.text.isEmpty) {
+                          _tituloController.text = product.title!;
+                        }
+                        _selectedLugar ??= product.place;
                         bool respuesta = await Provider
                           .of<Appstate>(context, listen: false)
-                          .saveProduct(_tituloController.text, _selectedLugar!);
+                          .updateProduct(product.key!,_tituloController.text, _selectedLugar!);
                         
                         if(respuesta) {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Producto agregado correctamente'),
+                              content: Text('Producto actualizado correctamente'),
                               backgroundColor: Colors.green,
                             ),
                           );
@@ -114,7 +127,7 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                       backgroundColor: WidgetStateProperty.all(Colors.indigo),
                       foregroundColor: WidgetStateProperty.all(Colors.white)
                     ),
-                    child: const Text('Aceptar'),
+                    child: const Text('Actualizar'),
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
@@ -167,7 +180,6 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                     .savePlace(_nuevoLugarController.text);
 
                   if(response) {
-
                     _nuevoLugarController.clear();
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/pages/new_product.dart';
 import 'package:myapp/pages/pages.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:myapp/services/appstate.dart';
+import 'package:myapp/values/theme.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -25,14 +25,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Lista Compras App',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+        theme: myTheme(context),
         initialRoute: "/",
         routes: {
           "/":(context) => const HomePage(),
           "/new-product":(context) => const ModalNewProduct(),
+          "/edit-product":(context) => const ModalEditProduct(),
         },
       )
     );

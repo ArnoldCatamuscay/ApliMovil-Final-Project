@@ -46,5 +46,19 @@ class ProductServices {
       return false;
     }
   }
+
+  Future<bool> updateProduct(String key, String newTitle, String newPlace) async {
+    try {
+      await FirebaseDatabase.instance
+        .reference()
+        .child('products')
+        .child(key)
+        .remove();
+      bool res = await saveProduct(newTitle, newPlace);
+      return res;
+    } catch(e) {
+      return false;
+    }
+  }
   
 }

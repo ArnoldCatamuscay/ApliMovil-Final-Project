@@ -31,6 +31,19 @@ class Appstate with ChangeNotifier {
       return _products;
     }
   }
+
+  Future<bool> updateProduct(String key, String newTitle, String newPlace) async {
+    try {
+      
+      bool response = await ProductServices().updateProduct(key, newTitle, newPlace);
+      if(response) {
+        notifyListeners();
+      }
+      return response;
+    } catch (e) {
+      return false;
+    }
+  }
   
   //* Places
   Future<bool> savePlace(String placeName) async {
