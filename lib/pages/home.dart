@@ -19,13 +19,13 @@ class _HomePageState extends State<HomePage> {
   Appstate? state;
 
   @override
-  Widget build(BuildContext context) {
-    state = Provider.of<Appstate>(context, listen: true);
+  Widget build(BuildContext context1) {
+    state = Provider.of<Appstate>(context1, listen: true);
     return Scaffold(
       appBar: AppBar(title: const Text('Lista Compras App')),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/new-product');
+          Navigator.pushNamed(context1, '/new-product');
         }, 
         child: const Icon(Icons.add),
         ),
@@ -39,6 +39,10 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: Text(product.title!),
                 subtitle: Text(product.place!),
+                trailing: IconButton(
+                  onPressed: () => Navigator.pushNamed(context1, '/edit-product', arguments: product), 
+                  icon: const Icon(Icons.edit)
+                ),
               )  
             ],
           );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/pages/edit-product.dart';
 import 'package:myapp/pages/new_product.dart';
 import 'package:myapp/pages/pages.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         routes: {
           "/":(context) => const HomePage(),
           "/new-product":(context) => const ModalNewProduct(),
+          "/edit-product":(context) => const ModalEditProduct(),
         },
       )
     );
