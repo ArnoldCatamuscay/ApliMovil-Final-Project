@@ -4,12 +4,16 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:myapp/models/product.dart';
 
 class ProductServices {
-  Future<List<Product>> getProducts() async {
+  Future<List<Product>> getProducts(String listKey) async {
 
     List<Product> products = [];
 
     try{
-      DatabaseReference ref = FirebaseDatabase.instance.reference().child('products');
+      DatabaseReference ref = FirebaseDatabase.instance
+        .reference()
+        .child('shoppingLists')
+        .child(listKey)
+        .child("products");
       DatabaseEvent event = await ref.once();
       DataSnapshot snap = event.snapshot;
       
@@ -30,11 +34,13 @@ class ProductServices {
     }
   }
 
-  Future<bool> saveProduct(String title, String place) async {
+  Future<bool> saveProduct(String listKey, String title, String place) async {
     try{
       await FirebaseDatabase.instance
         .reference()
-        .child('products')
+        .child('shoppingLists')
+        .child(listKey)
+        .child("products")
         .child(title)
         .set({
           'title': title,
@@ -47,14 +53,16 @@ class ProductServices {
     }
   }
 
-  Future<bool> updateProduct(String key, String newTitle, String newPlace) async {
+  Future<bool> updateProduct(String listKey, String productKey, String newTitle, String newPlace) async {
     try {
       await FirebaseDatabase.instance
         .reference()
-        .child('products')
-        .child(key)
+        .child('shoppingLists')
+        .child(listKey)
+        .child("products")
+        .child(productKey)
         .remove();
-      bool res = await saveProduct(newTitle, newPlace);
+      bool res = await saveProduct(listKey, newTitle, newPlace);
       return res;
     } catch(e) {
       return false;
