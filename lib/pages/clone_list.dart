@@ -28,7 +28,7 @@ class _ModalCloneListState extends State<ModalCloneList> {
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
     final ShoppingList shoppingList = arguments['shoppingList'];
-    final List<Product> products = arguments['products'];
+    final List<Product>? products = arguments['products'];
     state = Provider.of<Appstate>(context, listen: true);
     return Scaffold(
       appBar: AppBar(title: Text('Clonando la lista: ${shoppingList.name}'),),

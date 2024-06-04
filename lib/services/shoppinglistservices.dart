@@ -49,7 +49,8 @@ class ShoppingListServices {
       if (products != null) {
         final Map<String, dynamic> productsMap = {};
         for (var i = 0; i < products.length; i++) {
-          productsMap['product_$i'] = products[i].toMap();
+          String productTitle = products[i].title!;
+          productsMap[productTitle] = products[i].toMap();
         }
         data['products'] = productsMap;
       }
