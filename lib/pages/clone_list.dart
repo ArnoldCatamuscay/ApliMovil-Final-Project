@@ -1,20 +1,23 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:myapp/models/product.dart';
+import 'package:myapp/models/shoppinglist.dart';
 import 'package:myapp/services/appstate.dart';
 import 'package:provider/provider.dart';
 
-class ModalNewList extends StatefulWidget {
+class ModalCloneList extends StatefulWidget {
   
-  const ModalNewList({
+  const ModalCloneList({
     super.key,
   });
-  
+
   @override
-  State<ModalNewList> createState() => _ModalNewListState();
+  State<ModalCloneList> createState() => _ModalCloneListState();
 }
 
-class _ModalNewListState extends State<ModalNewList> {
+class _ModalCloneListState extends State<ModalCloneList> {
+  
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
@@ -23,9 +26,12 @@ class _ModalNewListState extends State<ModalNewList> {
 
   @override
   Widget build(BuildContext context) {
+    final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    final ShoppingList shoppingList = arguments['shoppingList'];
+    final List<Product> products = arguments['products'];
     state = Provider.of<Appstate>(context, listen: true);
     return Scaffold(
-      appBar: AppBar(title: const Text("Crear nueva lista de compras"),),
+      appBar: AppBar(title: Text('Clonando la lista: ${shoppingList.name}'),),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Form(
@@ -79,13 +85,13 @@ class _ModalNewListState extends State<ModalNewList> {
                       if (_formularioKey.currentState!.validate()) {
                         bool respuesta = await Provider
                           .of<Appstate>(context, listen: false)
-                          .saveShoppingList(_nameController.text, _dateController.text,null);
+                          .saveShoppingList(_nameController.text, _dateController.text, products);
                         
                         if(respuesta) {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Lista creada correctamente'),
+                              content: Text('Lista clonada correctamente'),
                               backgroundColor: Colors.green,
                             ),
                           );
@@ -103,7 +109,7 @@ class _ModalNewListState extends State<ModalNewList> {
                       backgroundColor: WidgetStateProperty.all(Colors.indigo),
                       foregroundColor: WidgetStateProperty.all(Colors.white)
                     ),
-                    child: const Text('Crear'),
+                    child: const Text('Clonar'),
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
@@ -121,8 +127,8 @@ class _ModalNewListState extends State<ModalNewList> {
             ],
             )
           )
-          ),
-    ),
+        ),
+      ),
     );
   }
 
@@ -132,4 +138,5 @@ class _ModalNewListState extends State<ModalNewList> {
     _dateController.dispose();
     super.dispose();
   }
+
 }

@@ -24,6 +24,7 @@ class ProductServices {
             key: child.key!,
             title: map['title'],
             place: map['place'],
+            isChecked: map['isChecked'] ?? false,
           );
           products.add(newProduct);
         }
@@ -34,7 +35,7 @@ class ProductServices {
     }
   }
 
-  Future<bool> saveProduct(String listKey, String title, String place) async {
+  Future<bool> saveProduct(String listKey, String title, String place, {bool isChecked = false}) async {
     try{
       await FirebaseDatabase.instance
         .reference()
@@ -45,6 +46,7 @@ class ProductServices {
         .set({
           'title': title,
           'place': place,
+          'isChecked': isChecked,
         });
       return true;
     } catch(e) {
@@ -65,6 +67,23 @@ class ProductServices {
       bool res = await saveProduct(listKey, newTitle, newPlace);
       return res;
     } catch(e) {
+      return false;
+    }
+  }
+
+  Future<bool> updateProductCheckStatus(String listKey, String productKey, bool isChecked) async {
+    try {
+      await FirebaseDatabase.instance
+        .reference()
+        .child('shoppingLists')
+        .child(listKey)
+        .child("products")
+        .child(productKey)
+        .update({
+          'isChecked': isChecked,
+        });
+      return true;
+    } catch (e) {
       return false;
     }
   }

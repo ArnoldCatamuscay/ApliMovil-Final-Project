@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           "/list-products":(context) => const ListProducts(),
           "/new-product":(context) => const ModalNewProduct(),
           "/edit-product":(context) => const ModalEditProduct(),
+          "/clone-list":(context) => const ModalCloneList(),
         },
       )
     );

@@ -47,6 +47,19 @@ class Appstate with ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> updateProductCheckStatus(String listKey, String productKey, bool isChecked) async {
+    try {
+      bool response = await ProductServices().updateProductCheckStatus(listKey, productKey, isChecked);
+      if (response) {
+        _products.firstWhere((product) => product.key == productKey).isChecked = isChecked;
+        notifyListeners();
+      }
+      return response;
+    } catch (e) {
+      return false;
+    }
+  }
   
   //* Places
   Future<bool> savePlace(String placeName) async {
@@ -82,9 +95,9 @@ class Appstate with ChangeNotifier {
     }
   }
 
-  Future<bool> saveShoppingList(String name, String date) async {
+  Future<bool> saveShoppingList(String name, String date, List<Product>? products) async {
     try {
-      bool response = await ShoppingListServices().saveShoppingList(name, date);
+      bool response = await ShoppingListServices().saveShoppingList(name, date, products);
       if(response) {
         notifyListeners();
       }
@@ -93,5 +106,7 @@ class Appstate with ChangeNotifier {
       return false;
     }
   }
+
+  
 
 }

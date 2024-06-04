@@ -36,6 +36,18 @@ class _HomePageState extends State<HomePage> {
             children: [
               for (ShoppingList shoppingList in myShoppingLists)
               ListTile(
+                leading: IconButton(
+                    onPressed: () => Navigator.pushNamed(
+                      context1,
+                      '/clone-list',
+                      arguments:{
+                        'shoppingList': shoppingList,
+                        'products': shoppingList.products,
+                      }
+                    ),
+                    icon: const Icon(Icons.copy),
+                    color: primary,
+                  ),
                 title: Text(shoppingList.name!),
                 subtitle: Text(shoppingList.date!),
                 onTap: () => Navigator.pushNamed(

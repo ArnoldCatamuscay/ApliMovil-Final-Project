@@ -38,25 +38,30 @@ class ShoppingListServices {
     }
   }
 
-  Future<bool> saveShoppingList(String name, String date) async {
-    try{
+  Future<bool> saveShoppingList(String name, String date, List<Product>? products) async {
+    try {
+      final Map<String, dynamic> data = {
+        'name': name,
+        'date': date,
+      };
+
+      // Agregar los productos si están presentes
+      if (products != null) {
+        final Map<String, dynamic> productsMap = {};
+        for (var i = 0; i < products.length; i++) {
+          productsMap['product_$i'] = products[i].toMap();
+        }
+        data['products'] = productsMap;
+      }
+
       await FirebaseDatabase.instance
         .reference()
         .child('shoppingLists')
         .child(name)
-        .set({
-          'name': name,
-          'date': date,
-          // 'products': {
-          //   'Detergente': {
-          //     'title': 'Detergente',
-          //     'place': 'D1'
-          //   }
-          // },
-        });
+        .set(data);
+
       return true;
-    } catch(e) {
-      // print("EL ERROR ES: $e");
+    } catch (e) {
       return false;
     }
   }
