@@ -29,8 +29,11 @@ class MyApp extends StatelessWidget {
         initialRoute: "/",
         routes: {
           "/":(context) => const HomePage(),
+          "/new-list": (context) => const ModalNewList(),
+          "/list-products":(context) => const ListProducts(),
           "/new-product":(context) => const ModalNewProduct(),
           "/edit-product":(context) => const ModalEditProduct(),
+          "/clone-list":(context) => const ModalCloneList(),
         },
       )
     );

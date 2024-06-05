@@ -27,6 +27,8 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
 
   @override
   Widget build(BuildContext context) {
+    final String listKey = ModalRoute.of(context)!.settings.arguments as String;
+
     state = Provider.of<Appstate>(context, listen: true);
     return Scaffold(
       appBar: AppBar(title: const Text("Agregar producto"),),
@@ -90,7 +92,7 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                         
                         bool respuesta = await Provider
                           .of<Appstate>(context, listen: false)
-                          .saveProduct(_tituloController.text, _selectedLugar!);
+                          .saveProduct(listKey,_tituloController.text, _selectedLugar!);
                         
                         if(respuesta) {
                           Navigator.pop(context);

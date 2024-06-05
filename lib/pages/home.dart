@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/models/product.dart';
+import 'package:myapp/models/shoppinglist.dart';
 import 'package:myapp/services/appstate.dart';
 import 'package:myapp/values/theme.dart';
 import 'package:provider/provider.dart';
@@ -19,33 +19,41 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context1) {
     state = Provider.of<Appstate>(context1, listen: true);
     return Scaffold(
-      appBar: AppBar(title: const Text('Lista Compras App')),
+      appBar: AppBar(title: const Text('Inicio'), centerTitle: true,),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context1, '/new-product');
+          Navigator.pushNamed(context1, '/new-list');
         }, 
         backgroundColor: primary,
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         ),
       body: FutureBuilder(
-        future: state!.getProducts(), 
+        future: state!.getShoppingLists(), 
         builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-          List misproducts = snapshot.data ?? [];
+          List myShoppingLists = snapshot.data ?? [];
           return ListView(
             children: [
-              for (Product product in misproducts)
+              for (ShoppingList shoppingList in myShoppingLists)
               ListTile(
-                title: Text(product.title!),
-                subtitle: Text(product.place!),
-                trailing: IconButton(
-                  onPressed: () => Navigator.pushNamed(
-                    context1, 
-                    '/edit-product', 
-                    arguments: product
-                  ), 
-                  icon: const Icon(Icons.edit),
-                  color: primary,
+                leading: IconButton(
+                    onPressed: () => Navigator.pushNamed(
+                      context1,
+                      '/clone-list',
+                      arguments:{
+                        'shoppingList': shoppingList,
+                        'products': shoppingList.products,
+                      }
+                    ),
+                    icon: const Icon(Icons.copy),
+                    color: primary,
+                  ),
+                title: Text(shoppingList.name!),
+                subtitle: Text(shoppingList.date!),
+                onTap: () => Navigator.pushNamed(
+                  context1, 
+                  '/list-products', 
+                  arguments: shoppingList
                 ),
               )  
             ],
