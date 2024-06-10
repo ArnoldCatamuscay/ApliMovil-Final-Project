@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/models/shoppinglist.dart';
 import 'package:myapp/pages/pages.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:myapp/services/appstate.dart';
@@ -12,6 +13,18 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Crear una instancia de Appstate
+  Appstate appState = Appstate();
+
+  // Comprobar si existen listas de compras
+  List<ShoppingList> shoppingLists = await appState.getShoppingLists();
+
+  // Si no existen listas, crear una nueva con el nombre "Mi lista"
+  if (shoppingLists.isEmpty) {
+    await appState.saveShoppingList("Mi lista", null);
+  }
+
   runApp(const MyApp());
 }
 
@@ -29,8 +42,7 @@ class MyApp extends StatelessWidget {
         initialRoute: "/",
         routes: {
           "/":(context) => const HomePage(),
-          "/new-list": (context) => const ModalNewList(),
-          "/list-products":(context) => const ListProducts(),
+          "/list-shopping": (context) => const ListShopping(),
           "/new-product":(context) => const ModalNewProduct(),
           "/edit-product":(context) => const ModalEditProduct(),
           "/clone-list":(context) => const ModalCloneList(),

@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:myapp/models/product.dart';
 import 'package:myapp/models/shoppinglist.dart';
 
 class ShoppingListServices {
@@ -11,23 +10,17 @@ class ShoppingListServices {
     try{
       DatabaseReference ref = FirebaseDatabase.instance
         .reference()
-        .child('shoppingLists');
+        .child('shopping_list');
       DatabaseEvent event = await ref.once();
       DataSnapshot snap = event.snapshot;
       
       if (snap.value != null && snap.value is Map) {
         for (var child in snap.children) {
           Map<dynamic, dynamic> map = child.value as Map<dynamic, dynamic>;
-          // Verificar si hay productos y convertirlos a una lista de Product
-          List<Product>? products;
-          if (map['products'] != null && map['products'] is Map) {
-            products = ShoppingList.productListFromMap(map['products']);
-          }
           ShoppingList newShoppingList = ShoppingList(
             key: child.key!,
             name: map['name'],
-            date: map['date'],
-            products: products,
+            createdAt: map['createdAt'],
           );
           shoppingLists.add(newShoppingList);
         }
@@ -38,27 +31,17 @@ class ShoppingListServices {
     }
   }
 
-  Future<bool> saveShoppingList(String name, String date, List<Product>? products) async {
+  Future<bool> saveShoppingList(String name, String createdAt, String? listKey) async {
     try {
       final Map<String, dynamic> data = {
         'name': name,
-        'date': date,
+        'createdAt': createdAt,
       };
-
-      // Agregar los productos si están presentes
-      if (products != null) {
-        final Map<String, dynamic> productsMap = {};
-        for (var i = 0; i < products.length; i++) {
-          String productTitle = products[i].title!;
-          productsMap[productTitle] = products[i].toMap();
-        }
-        data['products'] = productsMap;
-      }
 
       await FirebaseDatabase.instance
         .reference()
-        .child('shoppingLists')
-        .child(name)
+        .child('shopping_list')
+        .push() // .child(name)
         .set(data);
 
       return true;
@@ -66,5 +49,44 @@ class ShoppingListServices {
       return false;
     }
   }
-  
+
+  Future<ShoppingList> getLatestShoppingList() async {
+    ShoppingList latestList = ShoppingList();
+    DateTime? latestDate;
+
+    try {
+      DatabaseReference ref = FirebaseDatabase.instance
+        .reference()
+        .child('shopping_list');
+      DatabaseEvent event = await ref.once();
+      DataSnapshot snap = event.snapshot;
+
+      if (snap.value != null && snap.value is Map) {
+        for (var child in snap.children) {
+          Map<dynamic, dynamic> map = child.value as Map<dynamic, dynamic>;
+
+          // Crear la lista de compras actual
+          ShoppingList currentShoppingList = ShoppingList(
+            key: child.key!,
+            name: map['name'],
+            createdAt: map['createdAt'],
+          );
+
+          // Convertir la fecha a DateTime
+          DateTime currentDate = DateTime.parse(map['createdAt']);
+
+          // Verificar si es la fecha más reciente
+          if (latestDate == null || currentDate.isAfter(latestDate)) {
+            latestDate = currentDate;
+            latestList = currentShoppingList;
+          }
+        }
+      }
+      return latestList;
+    } catch (e) {
+      // Manejar el error según sea necesario
+      throw Exception("Error fetching latest shopping list: $e");
+    }
+  }
+
 }

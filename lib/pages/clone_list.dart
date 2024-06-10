@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:myapp/models/product.dart';
 import 'package:myapp/models/shoppinglist.dart';
 import 'package:myapp/services/appstate.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +18,6 @@ class ModalCloneList extends StatefulWidget {
 class _ModalCloneListState extends State<ModalCloneList> {
   
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
 
   final GlobalKey<FormState> _formularioKey = GlobalKey<FormState>();
   Appstate? state;
@@ -28,7 +26,6 @@ class _ModalCloneListState extends State<ModalCloneList> {
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
     final ShoppingList shoppingList = arguments['shoppingList'];
-    final List<Product>? products = arguments['products'];
     state = Provider.of<Appstate>(context, listen: true);
     return Scaffold(
       appBar: AppBar(title: Text('Clonando la lista: ${shoppingList.name}'),),
@@ -49,34 +46,6 @@ class _ModalCloneListState extends State<ModalCloneList> {
                   return null;
                 }
               ),
-              TextFormField(
-                controller: _dateController,
-                decoration: const InputDecoration(
-                  labelText: 'Fecha', 
-                  filled: true,
-                  prefixIcon: Icon(Icons.calendar_today),
-                ),
-                readOnly: true,
-                onTap: () async {
-                  DateTime? picked = await showDatePicker(
-                    context: context, 
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000), 
-                    lastDate: DateTime(2100)
-                  );
-                  if(picked != null) {
-                    setState(() {
-                      _dateController.text = picked.toString().split(" ")[0];
-                    });
-                  }
-                },
-                validator: (String? dato) {
-                  if(dato!.isEmpty) {
-                    return 'Este campo es requerido';
-                  }
-                  return null;
-                }
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -85,7 +54,7 @@ class _ModalCloneListState extends State<ModalCloneList> {
                       if (_formularioKey.currentState!.validate()) {
                         bool respuesta = await Provider
                           .of<Appstate>(context, listen: false)
-                          .saveShoppingList(_nameController.text, _dateController.text, products);
+                          .saveShoppingList(_nameController.text, shoppingList.key);
                         
                         if(respuesta) {
                           Navigator.pop(context);
@@ -135,7 +104,6 @@ class _ModalCloneListState extends State<ModalCloneList> {
   @override
   void dispose() {
     _nameController.dispose();
-    _dateController.dispose();
     super.dispose();
   }
 

@@ -5,6 +5,7 @@ import 'package:myapp/models/shoppinglist.dart';
 import 'package:myapp/services/placeservices.dart';
 import 'package:myapp/services/productservices.dart';
 import 'package:myapp/services/shoppinglistservices.dart';
+import 'package:intl/intl.dart';
 
 class Appstate with ChangeNotifier {
   
@@ -35,10 +36,10 @@ class Appstate with ChangeNotifier {
     }
   }
 
-  Future<bool> updateProduct(String listKey, String productKey, String newTitle, String newPlace) async {
+  Future<bool> updateProduct(String productKey, String newTitle, String newPlace) async {
     try {
       
-      bool response = await ProductServices().updateProduct(listKey, productKey, newTitle, newPlace);
+      bool response = await ProductServices().updateProduct(/*listKey, */productKey, newTitle, newPlace);
       if(response) {
         notifyListeners();
       }
@@ -48,11 +49,23 @@ class Appstate with ChangeNotifier {
     }
   }
 
-  Future<bool> updateProductCheckStatus(String listKey, String productKey, bool isChecked) async {
+  Future<bool> updateProductCheckStatus(String productKey, bool isChecked) async {
     try {
-      bool response = await ProductServices().updateProductCheckStatus(listKey, productKey, isChecked);
+      bool response = await ProductServices().updateProductCheckStatus(productKey, isChecked);
       if (response) {
         _products.firstWhere((product) => product.key == productKey).isChecked = isChecked;
+        notifyListeners();
+      }
+      return response;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> deleteProduct(String productKey) async {
+    try {
+      bool response = await ProductServices().deleteProduct(productKey);
+      if(response) {
         notifyListeners();
       }
       return response;
@@ -95,10 +108,23 @@ class Appstate with ChangeNotifier {
     }
   }
 
-  Future<bool> saveShoppingList(String name, String date, List<Product>? products) async {
+  Future<bool> saveShoppingList(String name, String? listKey) async {
     try {
-      bool response = await ShoppingListServices().saveShoppingList(name, date, products);
+      // Obtener la fecha y hora actual
+      DateTime now = DateTime.now();
+      // Formatear la fecha y hora actual como "yyyy-MM-dd HH:mm:ss"
+      String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+      bool response = await ShoppingListServices().saveShoppingList(name, formattedDate, listKey);
       if(response) {
+        if(listKey!=null) {
+          var latestList = await ShoppingListServices().getLatestShoppingList();
+          var products = await ProductServices().getProducts(listKey);
+          if(products.isNotEmpty) {
+            for (Product product in products) {
+              await ProductServices().saveProduct(latestList.key!, product.title!, product.place!);
+            }
+          }
+        }
         notifyListeners();
       }
       return response;
@@ -107,6 +133,8 @@ class Appstate with ChangeNotifier {
     }
   }
 
-  
+  Future<ShoppingList> getLatestShoppingList() async {
+    return await ShoppingListServices().getLatestShoppingList();
+  }
 
 }
