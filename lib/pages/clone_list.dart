@@ -22,6 +22,8 @@ class _ModalCloneListState extends State<ModalCloneList> {
   final GlobalKey<FormState> _formularioKey = GlobalKey<FormState>();
   Appstate? state;
 
+  final RegExp _allowedCharacters = RegExp(r'^[a-zA-Z0-9\s]+$'); 
+
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
@@ -42,6 +44,8 @@ class _ModalCloneListState extends State<ModalCloneList> {
                 validator: (String? dato) {
                   if(dato!.isEmpty) {
                     return 'Este campo es requerido';
+                  }else if (!_allowedCharacters.hasMatch(dato)) {
+                    return 'No se permiten caracteres especiales';
                   }
                   return null;
                 }
