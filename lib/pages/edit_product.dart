@@ -30,7 +30,6 @@ class _ModalEditProductState extends State<ModalEditProduct> {
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
     final Product product = arguments['product'];
-    final String listKey = arguments['key'];
 
     state = Provider.of<Appstate>(context, listen: true);
     return Scaffold(
@@ -105,7 +104,7 @@ class _ModalEditProductState extends State<ModalEditProduct> {
                         _selectedLugar ??= product.place;
                         bool respuesta = await Provider
                           .of<Appstate>(context, listen: false)
-                          .updateProduct(listKey,product.key!,_tituloController.text, _selectedLugar!);
+                          .updateProduct(product.key!,_tituloController.text, _selectedLugar!);
                         
                         if(respuesta) {
                           Navigator.pop(context);

@@ -25,6 +25,8 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
   final GlobalKey<FormState> _formularioKey = GlobalKey<FormState>();
   Appstate? state;
 
+  final RegExp _allowedCharacters = RegExp(r'^[a-zA-Z0-9\s]+$');
+
   @override
   Widget build(BuildContext context) {
     final String listKey = ModalRoute.of(context)!.settings.arguments as String;
@@ -46,6 +48,8 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                 validator: (String? dato) {
                   if(dato!.isEmpty) {
                     return 'Este campo es requerido';
+                  }else if (!_allowedCharacters.hasMatch(dato)) {
+                    return 'No se permiten caracteres especiales';
                   }
                   return null;
                 }
@@ -64,6 +68,12 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                               setState(() {
                                 _selectedLugar = newValue;
                               });
+                            },
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Este campo es requerido';
+                              }
+                              return null;
                             },
                             items: places.map<DropdownMenuItem<String>>((Place lugar) {
                                 return DropdownMenuItem<String>(
@@ -154,6 +164,8 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
                     return 'Este campo es requerido';
+                  } else if (!_allowedCharacters.hasMatch(value)) {
+                    return 'No se permiten caracteres especiales';
                   }
                   return null;
                 },
@@ -163,7 +175,7 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
           actions: [
             ElevatedButton(
               onPressed: () async {
-                if (_nuevoLugarController.text.isNotEmpty) {
+                if (_nuevoLugarController.text.isNotEmpty && _allowedCharacters.hasMatch(_nuevoLugarController.text)) {
                   bool response = await Provider
                     .of<Appstate>(context, listen: false)
                     .savePlace(_nuevoLugarController.text);
@@ -186,6 +198,13 @@ class _ModalNuevoProductoState extends State<ModalNewProduct> {
                       ),
                     );
                   }
+                } else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('No se permiten caracteres especiales!'),
+                        backgroundColor: Colors.red,
+                      ),
+                  );
                 }
               },
               style: ButtonStyle(

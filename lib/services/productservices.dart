@@ -11,9 +11,7 @@ class ProductServices {
     try{
       DatabaseReference ref = FirebaseDatabase.instance
         .reference()
-        .child('shoppingLists')
-        .child(listKey)
-        .child("products");
+        .child("list_item");
       DatabaseEvent event = await ref.once();
       DataSnapshot snap = event.snapshot;
       
@@ -25,8 +23,12 @@ class ProductServices {
             title: map['title'],
             place: map['place'],
             isChecked: map['isChecked'] ?? false,
+            list: map['list'],
           );
-          products.add(newProduct);
+          if(newProduct.list == listKey) {
+            products.add(newProduct);
+          }
+          
         }
       } 
       return products;
@@ -39,49 +41,58 @@ class ProductServices {
     try{
       await FirebaseDatabase.instance
         .reference()
-        .child('shoppingLists')
-        .child(listKey)
-        .child("products")
-        .child(title)
+        .child("list_item")
+        .push()
         .set({
           'title': title,
           'place': place,
           'isChecked': isChecked,
+          'list': listKey,
         });
       return true;
     } catch(e) {
-      //print(e);
       return false;
     }
   }
 
-  Future<bool> updateProduct(String listKey, String productKey, String newTitle, String newPlace) async {
+  Future<bool> updateProduct(String productKey, String newTitle, String newPlace) async {
     try {
       await FirebaseDatabase.instance
         .reference()
-        .child('shoppingLists')
-        .child(listKey)
-        .child("products")
+        .child("list_item")
         .child(productKey)
-        .remove();
-      bool res = await saveProduct(listKey, newTitle, newPlace);
-      return res;
+        .update({
+          'title': newTitle,
+          'place': newPlace,
+        });
+      return true;
     } catch(e) {
       return false;
     }
   }
 
-  Future<bool> updateProductCheckStatus(String listKey, String productKey, bool isChecked) async {
+  Future<bool> updateProductCheckStatus(String productKey, bool isChecked) async {
     try {
       await FirebaseDatabase.instance
         .reference()
-        .child('shoppingLists')
-        .child(listKey)
-        .child("products")
+        .child("list_item")
         .child(productKey)
         .update({
           'isChecked': isChecked,
         });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> deleteProduct(String productKey) async {
+    try {
+      await FirebaseDatabase.instance
+        .reference()
+        .child("list_item")
+        .child(productKey)
+        .remove();
       return true;
     } catch (e) {
       return false;
