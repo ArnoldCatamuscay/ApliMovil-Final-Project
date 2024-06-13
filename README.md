@@ -1,16 +1,11 @@
-# myapp
+# ApliMovil - Final Project 
 
-A new Flutter project.
+A cross-platform mobile application that allows you to manage
+a personalized shopping list
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Authors
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Arnold Steeven Catamuscay Perez](https://github.com/ArnoldCatamuscay)
+- [Cristian Eduardo Nuñez Valencia](https://github.com/Cristiannv)
+- [Juan Camilo Manzano Ceron](https://github.com/Juank0512)
